@@ -1,0 +1,75 @@
+﻿# Developer tests
+
+
+There are three types in this project:
+	* SingleList
+	* DoubleList
+	* Dict
+
+I would like you to complete their implementation.
+
+## SingleList
+
+This is a singly-linked list.  The Add method is already implemented.  Fill in 
+the rest of the implementation.
+
+Do not derive from IEnumerable<T>, IComparable<T> or IEquatable<T> and do not 
+create an IEnumerator<T> derived enumerator class for GetEnumerator().  This
+might seem like an arbitrary requirement, and it is, it's to see if you have 
+a deeper understanding of not just fundamental data-structures, but also some
+of the quirks of .NET.
+
+## DoubleList
+
+This is a doubly-linked list.  Nothing has been implemented.  Fill in 
+the rest of the implementation.
+
+Do not derive from IEnumerable<T>, IComparable<T> or IEquatable<T> and do not 
+create an IEnumerator<T> derived enumerator class for GetEnumerator()
+
+
+## Dict
+
+This is a dictionary type: a key-value store.  Items added are stored in-order.
+
+Do not derive from IDictionary<K,V>, IEnumerable<T>, IComparable<T> or IEquatable<T> 
+and do not create an IEnumerator<T> derived enumerator class for GetEnumerator()
+
+
+## LINQ
+
+There is a static class Extensions in Extensions.cs - I'd like you to implement some 
+basic LINQ operators for the types listed above.
+
+Implement Select, SelectMany and Where extension methods for DoubleList and SingleList
+Implement Select and Where extension methods for DoubleList and SingleList
+
+## Important
+
+Write your code as though it was for a real project.  So provide comments, don't take 
+short-cuts, follow my instruction, and provide tests to prove your code works.  The 
+tests can just be a set of Debug.Asserts in Program.cs - you don't need to use a 
+unit-testing framework.  Note, there's no trick questions here, there may however be
+bugs in what I have wrote.  Also make sure the methods are the most efficient they can
+be for the specified type.
+
+Also, if you're ever unsure of what to do, just email me - in the real world I'll be 
+your boss and you'll be able to ask me questions, so don't feel like this situation 
+is any different.  If you find this is taking you too long, drop me an email, if it's 
+too onerous then we can work something out.
+
+Good luck!
+
+# Implementation Notes
+
+## IEnumerator 
+The instruction to avoid inheriting from IEnumerable<T> or IEnumerator, 
+yet the method signatures provided explicitly return the IEnumerator. The intent here is not clear to me, 
+so have implemented IEnumerable myself.  
+
+## Issues not dealt with 
+	* Modification of the array while enumerating is considered out of scope. There are no If-clauses or exceptions for that 
+	* Concurrency is considered out of scope 
+
+## Issues not tested
+
