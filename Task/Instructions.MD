@@ -66,6 +66,7 @@ Good luck!
 The instruction to avoid inheriting from IEnumerable<T> or IEnumerator, 
 yet the method signatures provided explicitly return the IEnumerator. The intent here is not clear to me, 
 so have implemented IEnumerable myself.  
+So I have deleted the interfaces, and amazingly ForEach still works! I never realised it searches for an actual method name.. 
 
 ## Issues not dealt with 
 	* Modification of the array while enumerating is considered out of scope. There are no If-clauses or exceptions for that 

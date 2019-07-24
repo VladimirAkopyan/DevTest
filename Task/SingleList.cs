@@ -1,5 +1,5 @@
 ﻿using System;
-using Task.Interfaces;
+
 
 namespace Task
 {
@@ -8,10 +8,10 @@ namespace Task
     /// Stores a list of items in the order they're added
     /// </summary>
     /// <typeparam name="T">Value type</typeparam>
-    public class SingleList<T>// : IEnumeable<T>
+    public class SingleList<T>
     {
-        internal ListItem<T> head;
-        internal ListItem<T> tail;
+        internal ListItem head;
+        internal ListItem tail;
         internal int _count = 0; 
 
         public SingleList(){
@@ -19,7 +19,7 @@ namespace Task
         }
 
         public void Add(T value){
-            var item = new ListItem<T>(null, value);
+            var item = new ListItem(null, value);
 
             if (head != null)
             {     
@@ -50,11 +50,10 @@ namespace Task
         }
         
 
-        public int IndexOf(T item)
-        {
+        public int IndexOf(T item){
             var c = System.Collections.Generic.EqualityComparer<T>.Default;
             int i = 0; 
-            ListItem<T> node = head; 
+            ListItem node = head; 
             while(node != null)
             {
                 if(c.Equals(node.Value, item))
@@ -66,26 +65,22 @@ namespace Task
             return -1; 
         }
 
-        public void Insert(int index, T item)
-        {
+        public void Insert(int index, T item){
             throw new NotImplementedException();
         }
 
-        public void RemoveAt(int index)
-        {
+        public void RemoveAt(int index){
             throw new NotImplementedException();
         }
 
-        public void Clear()
-        {
+        public void Clear(){
             _count = 0;
-            head = new ListItem<T>(null, default(T));
+            head = new ListItem(null, default(T));
             tail = head;
         }
 
-        public bool Contains(T item)
-        {
-            ListItem<T> node = head;
+        public bool Contains(T item){
+            ListItem node = head;
             while (node != null)
             {
                 if (node.Value.Equals(item))
@@ -96,13 +91,11 @@ namespace Task
             return false; 
         }
 
-        public bool Remove(T item)
-        {
+        public bool Remove(T item){
             throw new NotImplementedException();
         }
 
-        public IEnumerator<T> GetEnumerator()
-        {
+        public Enumerator GetEnumerator(){
             return new Enumerator(this);
         }
 /*
@@ -112,11 +105,11 @@ namespace Task
         }
         */
 
-        internal struct Enumerator : IEnumerator<T> {
+        public struct Enumerator {
             SingleList<T> _list; 
             //Index here starts at 1 because .Net starts with MoveNext before it calls Current
             int _index;
-            ListItem<T> _current;
+            ListItem _current;
 
             internal Enumerator(SingleList<T> singleList){
                 _list = singleList;
@@ -152,19 +145,17 @@ namespace Task
                     return true; 
             }
 
-            public void Reset()
-            {
+            public void Reset(){
                 _index = 0;
                 _current = null;
             }
         }
 
-        public sealed class ListItem<T>
-        {
-            public ListItem<T> Next;
+        public sealed class ListItem{
+            public ListItem Next;
             public T Value;
 
-            public ListItem(ListItem<T> next, T value)
+            public ListItem(ListItem next, T value)
             {
                 Next = next;
                 Value = value;
