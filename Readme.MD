@@ -75,8 +75,8 @@ All operations are performed with an array for 5,000,000 random numbers, except 
 
 |Operation           | SingleList         | System.List  | System.LinkedList  | 
 |--------------------|--------------------|--------------|--------------------|
-| Add		         |    820 ms           |              |   780 ms          |   
+| Add		         |    820 ms          |              |   780 ms          |   
 | Enumerator         |   74 ms			  |              |    69 ms           |
 | Indexer Sequential |   170 ms           |     24 ms    |     N/A            |
-| Indexer Random	 |  15126076 Ticks    |   6615 ticks |     N/A            |
+| Indexer Random	 |  15,126,076 Ticks  |  6,615 ticks |     N/A            |
 
