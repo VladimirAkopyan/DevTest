@@ -1,0 +1,14 @@
+version: 2
+notify:
+  webhooks:
+    - url: https://webhooks.gitter.im/e/dcb2d72c9dad83a95777
+jobs:
+  build:
+    docker:
+      - image: mcr.microsoft.com/dotnet/core/sdk:2.2
+    steps:
+      - checkout
+      - run: find .
+      - run: dotnet restore
+      - run: dotnet build
+      - run: dotnet test 
