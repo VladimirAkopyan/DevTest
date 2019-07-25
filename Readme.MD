@@ -1,4 +1,7 @@
-﻿# Developer tests
+## Status:
+[![CircleCI](https://circleci.com/gh/VladimirAkopyan/DevTest.svg?style=svg)](https://circleci.com/gh/VladimirAkopyan/DevTest)
+
+# Developer tests
 
 
 There are three types in this project:
