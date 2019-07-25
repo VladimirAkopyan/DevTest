@@ -10,7 +10,7 @@ namespace Tests
 {
     public class SingleListTests
     {
-        private readonly ITestOutputHelper output;
+
 
         /// <summary>
         /// List used for testing and comaprison
@@ -20,26 +20,17 @@ namespace Tests
             1, 2, 3, 4, 6, 7, 8, -10, -20, 50, 4
         };
         SingleList<int> testedList = new SingleList<int>();
-        //Large array of random numbers used for performance testing
-        static int[] _BenchmarkData = new int[5000000];
 
-        public SingleListTests(ITestOutputHelper output)
+
+        public SingleListTests()
         {
-            this.output = output;
             foreach (var value in integerListSystem)
             {
                 testedList.Add(value);
             }
         }
 
-        static SingleListTests()
-        {           
-            Random random = new Random(12);
-            for (int i = 0; i < _BenchmarkData.Length; i++)
-            {
-                _BenchmarkData[i] = random.Next(10000);
-            }
-        }
+
 
         /// <summary>
         /// Basic Test to prove we can add items to the list and get what we'd expect
@@ -195,113 +186,6 @@ namespace Tests
             };
             IndexComparisonHelper(data);
         }
-
-        /// <summary>
-        /// Comparing perfomance against the system implementation of double linked list, as the closest thing
-        /// </summary>
-        [Fact]
-        public void PerfTestInsert()
-        {
-            var systemList = new System.Collections.Generic.LinkedList<int>(); 
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start(); 
-            foreach(var number in _BenchmarkData)
-            {
-                systemList.AddLast(number); 
-            }
-            stopwatch.Stop();
-            var SystemListTime = stopwatch.ElapsedMilliseconds;
-            var testedList = new SingleList<int>(); 
-            stopwatch.Restart();
-            foreach (var number in _BenchmarkData)
-            {
-                testedList.Add(number);
-            }
-            stopwatch.Stop();
-            output.WriteLine($"Adding  - My List {stopwatch.ElapsedMilliseconds}ms | LinkedList {SystemListTime}");
-        }
-
-        /// <summary>
-        /// Comparing sequential access with List and LinkedList
-        /// </summary>
-        [Fact]
-        public void PerfTestSequentialRead()
-        {
-            var systemList = new System.Collections.Generic.List<int>(_BenchmarkData);
-            var systemLinkedList = new System.Collections.Generic.LinkedList<int>(_BenchmarkData);
-
-            var testedList = new SingleList<int>();
-            foreach (var number in _BenchmarkData)
-            {
-                testedList.Add(number);
-            }
-
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-            for(int i =0; i < _BenchmarkData.Length; i++)
-            {
-                var it = systemList[i]; 
-            }
-            stopwatch.Stop();
-            var systemListTime = stopwatch.ElapsedMilliseconds; 
-            
-            stopwatch.Restart();
-            foreach(var item in systemLinkedList)
-            {
-                var it = item;
-            }
-            stopwatch.Stop();
-            var systemLinkedListTime = stopwatch.ElapsedMilliseconds; 
-
-            stopwatch.Restart();
-            for (int i = 0; i < _BenchmarkData.Length; i++)
-            {
-                var it = testedList[i];
-            }
-            /* Tested this for comparison, it's about three times faster 
-            foreach(var item in testedList)
-            {
-                var it = item; 
-            }*/
-            stopwatch.Stop();
-            output.WriteLine($"SequentialRead  - My List {stopwatch.ElapsedMilliseconds}ms | System List {systemListTime}| System linkedList {systemLinkedListTime}");
-        }
-
-        /// <summary>
-        /// Comparing random access with List, this will be bad 
-        /// </summary>
-        [Fact]
-        public void PerfTestRandomRead()
-        {
-            var systemList = new System.Collections.Generic.List<int>();
-
-            var testedList = new SingleList<int>();
-            for(int i = 0; i < 100000; i++)
-            {
-                testedList.Add(_BenchmarkData[i]);
-                systemList.Add(_BenchmarkData[i]);
-            }
-
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-            for (int i = 0; i < systemList.Count; i++)
-            {
-                var index = _BenchmarkData[i % 50];
-                var it = systemList[index];
-            }
-            stopwatch.Stop();
-            var systemListTime = stopwatch.ElapsedMilliseconds;
-
-            stopwatch.Restart();
-            for (int i = 0; i < testedList.Count; i++)
-            {
-                var index = _BenchmarkData[i % 50]; 
-                var it = testedList[index];
-            }
-            stopwatch.Stop();
-            output.WriteLine($"SequentialRead  - My List {stopwatch.ElapsedMilliseconds}ms | System List {systemListTime}");
-        }
-
 
     }
 }

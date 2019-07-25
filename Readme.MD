@@ -36,14 +36,6 @@ Do not derive from IDictionary<K,V>, IEnumerable<T>, IComparable<T> or IEquatabl
 and do not create an IEnumerator<T> derived enumerator class for GetEnumerator()
 
 
-## LINQ
-
-There is a static class Extensions in Extensions.cs - I'd like you to implement some 
-basic LINQ operators for the types listed above.
-
-Implement Select, SelectMany and Where extension methods for DoubleList and SingleList
-Implement Select and Where extension methods for DoubleList and SingleList
-
 ## Important
 
 Write your code as though it was for a real project.  So provide comments, don't take 
@@ -73,4 +65,18 @@ So I have deleted the interfaces, and amazingly ForEach still works! I never rea
 	* Concurrency is considered out of scope 
 
 ## Issues not tested
+
+
+##  Performance 
+I wanted to compare performance with that of system collections to make sure it's roughly on par. 
+The performance numbers here are only a rough guide -> this "benchmark" does not have multiple iterations, and if accurate information is wanted I would reach for Benchmark.net
+
+All operations are performed with an array for 5,000,000 random numbers, except Random Access, which uses a smaller dataset of 700,000
+
+|Operation           | SingkleLinkedList  | System.List  | System.LinkedList  | 
+|--------------------|--------------------|--------------|--------------------|
+| Add		         |    970ms           |              |   720 ms           |   
+| Enumerator         |   100 ms			  |              |    60 ms           |
+| Indexer Sequential |   320ms            |     24 ms    |                    |
+| Indexer Random	 |  10650 ms          |      6 ms    |                    |
 
