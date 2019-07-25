@@ -101,7 +101,7 @@ namespace Tests
                 var it = item;
             }
             stopwatch.Stop();
-            output.WriteLine($"'Foreach' {stopwatch.ElapsedMilliseconds}ms | 'for [i]| {linkedListIterated}| System.List {systemListDuration}| System.LinkedList {systemLinkedListDuration}");
+            output.WriteLine($"'Enumerator' {stopwatch.ElapsedMilliseconds}ms | Indexer | {linkedListIterated}| System.List {systemListDuration}| System.LinkedList {systemLinkedListDuration}");
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace Tests
             var systemList = new System.Collections.Generic.List<int>();
 
             var testedList = new SingleList<int>();
-            for (int i = 0; i < 700000; i++)
+            for (int i = 0; i < 50000; i++)
             {
                 testedList.Add(_BenchmarkData[i]);
                 systemList.Add(_BenchmarkData[i]);
@@ -127,7 +127,7 @@ namespace Tests
                 var it = systemList[index];
             }
             stopwatch.Stop();
-            var systemListTime = stopwatch.ElapsedMilliseconds;
+            var systemListTime = stopwatch.ElapsedTicks;
 
             stopwatch.Restart();
             for (int i = 0; i < testedList.Count; i++)
@@ -136,7 +136,7 @@ namespace Tests
                 var it = testedList[index];
             }
             stopwatch.Stop();
-            output.WriteLine($"LinkedList {stopwatch.ElapsedMilliseconds}ms | System.List {systemListTime}");
+            output.WriteLine($"LinkedList {stopwatch.ElapsedTicks} t | System.List {systemListTime} t");
         }
 
     }

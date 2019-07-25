@@ -71,12 +71,12 @@ So I have deleted the interfaces, and amazingly ForEach still works! I never rea
 I wanted to compare performance with that of system collections to make sure it's roughly on par. 
 The performance numbers here are only a rough guide -> this "benchmark" does not have multiple iterations, and if accurate information is wanted I would reach for Benchmark.net
 
-All operations are performed with an array for 5,000,000 random numbers, except Random Access, which uses a smaller dataset of 700,000
+All operations are performed with an array for 5,000,000 random numbers, except Random Access, which uses a smaller dataset of 50,000
 
-|Operation           | SingleList  | System.List  | System.LinkedList  | 
+|Operation           | SingleList         | System.List  | System.LinkedList  | 
 |--------------------|--------------------|--------------|--------------------|
-| Add		         |    970ms           |              |   720 ms           |   
-| Enumerator         |   100 ms			  |              |    60 ms           |
-| Indexer Sequential |   320ms            |     24 ms    |                    |
-| Indexer Random	 |  10650 ms          |      6 ms    |                    |
+| Add		         |    820 ms           |              |   780 ms          |   
+| Enumerator         |   74 ms			  |              |    69 ms           |
+| Indexer Sequential |   170 ms           |     24 ms    |     N/A            |
+| Indexer Random	 |  15126076 Ticks    |   6615 ticks |     N/A            |
 

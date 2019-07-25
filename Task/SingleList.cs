@@ -14,24 +14,22 @@ namespace Task
         internal ListItem tail;
         internal int _count = 0;
 
-        Enumerator _indexCache;
         //For optimisation of index operations, will help sequential access 
-        //private IndexCache _indexCache = new IndexCache();  
+        private IndexCache _indexCache = new IndexCache();  
 
         public SingleList(){
             head = null;
-            _indexCache = new Enumerator(this);           
         }
 
         public void Add(T value){
-            if (head != null) { //Adding at the end of existing list
+            if (head != null) {
                 var item = new ListItem(null, value);
                 tail.Next = item;
                 tail = item;
             }
-            else { //Adding First Element
+            else {
                 head = new ListItem(null, value);
-                _indexCache.SetToStart();
+                _indexCache.Set(head, 0);
                 tail = head;
             }            
             _count++; 
@@ -44,13 +42,15 @@ namespace Task
         {
             if (index < _indexCache.Index)
             {
-                _indexCache.SetToStart();
+                _indexCache.Set(head, 0);
+
             }
             while (index > _indexCache.Index)
             {
-                _indexCache.MoveNext();
+                _indexCache.Item = _indexCache.Item.Next;
+                _indexCache.Index++;
             }
-            return _indexCache.CurrentListItem;
+            return _indexCache.Item;
         }
 
 
@@ -76,39 +76,33 @@ namespace Task
         /// <param name="index"></param>
         /// <param name="value"></param>
         public void Insert(int index, T value){
-            if ((uint)index >= (uint)_count) throw new ArgumentOutOfRangeException();
+            if ((uint)index > (uint)_count) throw new ArgumentOutOfRangeException();
 
             ListItem inserted = new ListItem(null, value);
 
             if (index == 0){
                 inserted.Next = head;
                 head = inserted;
-                _indexCache = new Enumerator(this);
-                _indexCache.MoveNext();
             }
             else {
                 var prev = Seek(index -1);
                 inserted.Next = prev.Next;
                 prev.Next = inserted;
             }
-            //Need to update our index to get correct results 
-            if (index <= _indexCache.Index){ 
-                _indexCache.AdvanceIndex();
+            if (index <= _indexCache.Index){ //Need to update our index to get correct results 
+                _indexCache.Set(_indexCache.Item, _indexCache.Index + 1);
             }
             _count++;
         }
 
+
         public void RemoveAt(int index){
             if ((uint)index >= (uint)_count) throw new ArgumentOutOfRangeException();
-            if (index == 0)
-            {
-                head = head.Next;
-                _indexCache.SetToStart();
-            }
+            if (index == 0) head = head.Next;
             else
             {
-                var prev = Seek(index - 1);
-                prev.Next = prev.Next.Next;
+                var prev = Seek(index -1);
+                prev.Next = prev.Next.Next; 
             }
             _count--;
         }
@@ -116,7 +110,7 @@ namespace Task
         public void Clear(){
             _count = 0;
             head = new ListItem(null, default(T));
-            _indexCache.SetToStart(); 
+            _indexCache.Set(null, 0); 
             tail = head;
         }
 
@@ -172,6 +166,7 @@ namespace Task
         public Enumerator GetEnumerator(){
             return new Enumerator(this);
         }
+
 /* TODO: 
         public IEnumeable<T> AsEnumerable()
         {
@@ -183,25 +178,19 @@ namespace Task
             SingleList<T> _list; 
             //Index here starts at 1 because .Net starts with MoveNext before it calls Current
             int _index;
-            ListItem _current;
+            ListItem _currentNode, _nextNode;
 
             internal Enumerator(SingleList<T> singleList){
                 _list = singleList;
                 _index = 0;
-                _current = null; 
+                _currentNode = null;
+                _nextNode = _list.head; 
             }
 
             /// <summary>
             /// Returns null when collection iterator is not in a valid state
             /// </summary>
-            public T Current => _current.Value;
-
-            internal ListItem CurrentListItem => _current;
-
-            internal int Index => _index -1;
-
-            //This is used when item was inserted before this position; 
-            internal int AdvanceIndex() => _index++; 
+            public T Current => _currentNode.Value;
 
             /// <summary>
             /// There are three scnarios, advancing from 0 to 1
@@ -210,32 +199,20 @@ namespace Task
             /// </summary>
             /// <returns></returns>
             public bool MoveNext(){
-                if (_index == 0) // Initialisation
+                if (_nextNode == null)
                 {
-                    _current = _list.head;
-                    _index++;
-                    return true; 
+                    return false;  //End of collection reached
                 }
-                else if(_current == null) return false;  //End of collection reached long ago
-                _current = _current.Next;
+                _currentNode = _nextNode; 
+                _nextNode = _nextNode.Next;                
                 _index++;
-
-                if (_current == null)
-                    return false;
-                else
-                    return true; 
-            }
-
-            //Used internally inside SingleList to set to beginging of the List
-            internal void SetToStart()
-            {
-                _index = 1; 
-                _current = _list.head;
+                return true; 
             }
 
             public void Reset(){
-                _index = 0;
-                _current = null;
+                _index = 0;                
+                _currentNode = null;
+                _nextNode = _list.head; 
             }
         }
 
@@ -249,8 +226,9 @@ namespace Task
                 Value = value;
             }
         }
+
         /// <summary>
-        /// Simular idea to Iterator used by IEnumerable
+        /// Simular idea to the Iterator used by IEnumerable
         /// </summary>
         private class IndexCache
         {
@@ -260,14 +238,14 @@ namespace Task
             public void Advance()
             {
                 Index++;
-                Item = Item.Next; 
+                Item = Item.Next;
             }
 
             public void Set(ListItem item, int index)
             {
                 Item = item;
-                Index = index; 
-            }            
-        } 
+                Index = index;
+            }
+        }
     }
 }
