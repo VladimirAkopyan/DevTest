@@ -14,22 +14,24 @@ namespace Task
         internal ListItem tail;
         internal int _count = 0;
 
+        Enumerator _indexCache;
         //For optimisation of index operations, will help sequential access 
-        private IndexCache _indexCache = new IndexCache();  
+        //private IndexCache _indexCache = new IndexCache();  
 
         public SingleList(){
             head = null;
+            _indexCache = new Enumerator(this);           
         }
 
         public void Add(T value){
-            if (head != null) {
+            if (head != null) { //Adding at the end of existing list
                 var item = new ListItem(null, value);
                 tail.Next = item;
                 tail = item;
             }
-            else {
+            else { //Adding First Element
                 head = new ListItem(null, value);
-                _indexCache.Set(head, 0);
+                _indexCache.SetToStart();
                 tail = head;
             }            
             _count++; 
@@ -37,41 +39,33 @@ namespace Task
 
         public int Count => _count; 
 
-        private ListItem GrabBefore(int index){
-            index = index - 1; //We want to work with the node precceding it
-            if (index == _indexCache.Index) return _indexCache.Item;
-            if (index > _count) return null;
 
-            ListItem currentItem;
-            int currentIndex = 0;
-            if (index > _indexCache.Index)
+        private ListItem Seek(int index)
+        {
+            if (index < _indexCache.Index)
             {
-                currentItem = _indexCache.Item;
-                currentIndex = _indexCache.Index;
+                _indexCache.SetToStart();
             }
-            else currentItem = head;
-
-            while (index > currentIndex)
+            while (index > _indexCache.Index)
             {
-                currentItem = currentItem.Next;
-                currentIndex++;
+                _indexCache.MoveNext();
             }
-            _indexCache.Set(currentItem, currentIndex);
-            return currentItem; 
+            return _indexCache.CurrentListItem;
         }
+
 
         //This is going to be very slow to traverse when not accessed sequentially; 
         //As it is a linked list, nothing but exhaustive search will do. 
         public T this[int index]{
             get
             {
-                if (index == 0) return head.Value;
-                return GrabBefore(index).Next.Value; 
+                if ((uint)index >= (uint)_count) throw new ArgumentOutOfRangeException(); 
+                return Seek(index).Value; 
             }
             set
             {
-                if (index == 0) head.Value = value;
-                else GrabBefore(index).Next.Value = value;
+                if ((uint) index >= (uint)_count) throw new ArgumentOutOfRangeException();
+                Seek(index).Value = value;
             }
         }
         
@@ -82,42 +76,47 @@ namespace Task
         /// <param name="index"></param>
         /// <param name="value"></param>
         public void Insert(int index, T value){
-            if (index > Count) throw new IndexOutOfRangeException(); 
+            if ((uint)index >= (uint)_count) throw new ArgumentOutOfRangeException();
 
             ListItem inserted = new ListItem(null, value);
 
             if (index == 0){
                 inserted.Next = head;
                 head = inserted;
+                _indexCache = new Enumerator(this);
+                _indexCache.MoveNext();
             }
             else {
-                var prev = GrabBefore(index);
+                var prev = Seek(index -1);
                 inserted.Next = prev.Next;
                 prev.Next = inserted;
             }
-            if (index <= _indexCache.Index){ //Need to update our index to get correct results 
-                _indexCache.Set(_indexCache.Item, _indexCache.Index + 1);
+            //Need to update our index to get correct results 
+            if (index <= _indexCache.Index){ 
+                _indexCache.AdvanceIndex();
             }
             _count++;
         }
 
-        //I have changed method signature to return bool, to indicate if index was out of range
-        public bool RemoveAt(int index){
-            if (index >= _count) return false; 
-            if (index == 0) head = head.Next;
+        public void RemoveAt(int index){
+            if ((uint)index >= (uint)_count) throw new ArgumentOutOfRangeException();
+            if (index == 0)
+            {
+                head = head.Next;
+                _indexCache.SetToStart();
+            }
             else
             {
-                var prev = GrabBefore(index);
-                prev.Next = prev.Next.Next; 
+                var prev = Seek(index - 1);
+                prev.Next = prev.Next.Next;
             }
             _count--;
-            return true;
         }
 
         public void Clear(){
             _count = 0;
             head = new ListItem(null, default(T));
-            _indexCache.Set(null, 0); 
+            _indexCache.SetToStart(); 
             tail = head;
         }
 
@@ -197,6 +196,13 @@ namespace Task
             /// </summary>
             public T Current => _current.Value;
 
+            internal ListItem CurrentListItem => _current;
+
+            internal int Index => _index -1;
+
+            //This is used when item was inserted before this position; 
+            internal int AdvanceIndex() => _index++; 
+
             /// <summary>
             /// There are three scnarios, advancing from 0 to 1
             /// From 1 to 2, 3, 5, i.e. regular
@@ -220,9 +226,15 @@ namespace Task
                     return true; 
             }
 
+            //Used internally inside SingleList to set to beginging of the List
+            internal void SetToStart()
+            {
+                _index = 1; 
+                _current = _list.head;
+            }
+
             public void Reset(){
                 _index = 0;
-                
                 _current = null;
             }
         }
@@ -237,17 +249,25 @@ namespace Task
                 Value = value;
             }
         }
-
+        /// <summary>
+        /// Simular idea to Iterator used by IEnumerable
+        /// </summary>
         private class IndexCache
         {
-            public ListItem Item { get; private set; }
-            public int Index { get; private set; }
+            public ListItem Item;
+            public int Index;
+
+            public void Advance()
+            {
+                Index++;
+                Item = Item.Next; 
+            }
 
             public void Set(ListItem item, int index)
             {
                 Item = item;
                 Index = index; 
-            }
+            }            
         } 
     }
 }

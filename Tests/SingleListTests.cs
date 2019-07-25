@@ -79,15 +79,14 @@ namespace Tests
         [Fact]
         public void RemoveAt(){
             //Remove At Index Tests
-            Assert.True(testedList.RemoveAt(2));
+            testedList.RemoveAt(2);
             Assert.Equal(testedList.Count, integerListSystem.Count - 1); 
             Assert.Equal(testedList[2], integerListSystem[3]);
 
-            Assert.True(testedList.RemoveAt(0));
+            testedList.RemoveAt(0);
             Assert.Equal(testedList.Count, integerListSystem.Count - 2);
             Assert.Equal(testedList[0], integerListSystem[1]);
 
-            Assert.False(testedList.RemoveAt(999));
             Assert.Equal(testedList.Count, integerListSystem.Count - 2);
         }
 

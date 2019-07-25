@@ -73,7 +73,7 @@ The performance numbers here are only a rough guide -> this "benchmark" does not
 
 All operations are performed with an array for 5,000,000 random numbers, except Random Access, which uses a smaller dataset of 700,000
 
-|Operation           | SingkleLinkedList  | System.List  | System.LinkedList  | 
+|Operation           | SingleList  | System.List  | System.LinkedList  | 
 |--------------------|--------------------|--------------|--------------------|
 | Add		         |    970ms           |              |   720 ms           |   
 | Enumerator         |   100 ms			  |              |    60 ms           |

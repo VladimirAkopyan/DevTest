@@ -5,11 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Instructions.MD" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Instructions.MD" />
+    <None Remove="Readme.MD" />
   </ItemGroup>
 
 </Project>
