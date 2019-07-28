@@ -12,9 +12,10 @@ namespace Tests
         public float number2; 
     }
 
-    struct TestDataStruct
+    public struct Dog
     {
-        public int number1;
-        public float number2; 
+        public int Age;
+        public float Length;
+        public string Name; 
     }
 }
