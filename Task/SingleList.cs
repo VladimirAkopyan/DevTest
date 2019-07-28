@@ -7,7 +7,8 @@ namespace Task {
     /// Stores a list of items in the order they're added
     /// </summary>
     /// <typeparam name="T">Value type</typeparam>
-    public class SingleList<T> {
+    public class SingleList<T> : IMyEnumerable<T>
+     {
         internal ListItem head;
         internal ListItem tail;
         internal int _count = 0;
@@ -144,11 +145,10 @@ namespace Task {
                 return true;
             } else return false; //Does not exist
         }
-
-        public Enumerator GetEnumerator() {
-            return new Enumerator(this);
+        
+        public IMyEnumerator<T> GetEnumerator() {
+            return new Enumerator<T>(this);
         }
-
 
         public IEnumerable<T> AsEnumerable() {
             foreach (var item in this) {
@@ -156,46 +156,7 @@ namespace Task {
             }
         }
 
-        public struct Enumerator {
-            SingleList<T> _list;
-            //Index here starts at 1 because .Net starts with MoveNext before it calls Current
-            int _index;
-            ListItem _currentNode, _nextNode;
 
-            internal Enumerator(SingleList<T> singleList) {
-                _list = singleList;
-                _index = 0;
-                _currentNode = null;
-                _nextNode = _list.head;
-            }
-
-            /// <summary>
-            /// Returns null when collection iterator is not in a valid state
-            /// </summary>
-            public T Current => _currentNode.Value;
-
-            /// <summary>
-            /// There are three scnarios, advancing from 0 to 1
-            /// From 1 to 2, 3, 5, i.e. regular
-            /// Reaching the end of the collection, after which reset needs to be called; 
-            /// </summary>
-            /// <returns></returns>
-            public bool MoveNext() {
-                if (_nextNode == null) {
-                    return false;  //End of collection reached
-                }
-                _currentNode = _nextNode;
-                _nextNode = _nextNode.Next;
-                _index++;
-                return true;
-            }
-
-            public void Reset() {
-                _index = 0;
-                _currentNode = null;
-                _nextNode = _list.head;
-            }
-        }
 
         public sealed class ListItem {
             public ListItem Next;
@@ -225,4 +186,45 @@ namespace Task {
             }
         }
     }
+    public struct Enumerator<T> : IMyEnumerator<T> {
+        SingleList<T> _list;
+        //Index here starts at 1 because .Net starts with MoveNext before it calls Current
+        int _index;
+        SingleList<T>.ListItem _currentNode, _nextNode;
+
+        internal Enumerator(SingleList<T> singleList) {
+            _list = singleList;
+            _index = 0;
+            _currentNode = null;
+            _nextNode = _list.head;
+        }
+
+        /// <summary>
+        /// Returns null when collection iterator is not in a valid state
+        /// </summary>
+        public T Current => _currentNode.Value;
+
+        /// <summary>
+        /// There are three scnarios, advancing from 0 to 1
+        /// From 1 to 2, 3, 5, i.e. regular
+        /// Reaching the end of the collection, after which reset needs to be called; 
+        /// </summary>
+        /// <returns></returns>
+        public bool MoveNext() {
+            if (_nextNode == null) {
+                return false;  //End of collection reached
+            }
+            _currentNode = _nextNode;
+            _nextNode = _nextNode.Next;
+            _index++;
+            return true;
+        }
+
+        public void Reset() {
+            _index = 0;
+            _currentNode = null;
+            _nextNode = _list.head;
+        }
+    }
+
 }

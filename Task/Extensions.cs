@@ -6,7 +6,7 @@ using System.Reflection;
 namespace Task {
     public static class Extensions {
 
-        public static IEnumerable<TResult> Select<TSource, TResult>(this SingleList<TSource> list,
+        public static IEnumerable<TResult> Select<TSource, TResult>(this IMyEnumerable<TSource> list,
             Func<TSource, TResult> selector) {
             if (selector == null) throw new ArgumentNullException(nameof(selector));
 
@@ -15,7 +15,7 @@ namespace Task {
             return Select(list, selectWithIterator);
         }
 
-        public static IEnumerable<TResult> Select<TSource, TResult>(this SingleList<TSource> list,
+        public static IEnumerable<TResult> Select<TSource, TResult>(this IMyEnumerable<TSource> list,
             Func<TSource, int, TResult> selector) {
 
             if (list == null) throw new ArgumentNullException(nameof(list));
