@@ -176,7 +176,7 @@ namespace Tests {
         public void AsEnumerableTest() {
             var testedEnumerable = _intListTested.AsEnumerable();
             var systemEnumerable = _intListSystem.AsEnumerable();
-            CompareEnumerables(testedEnumerable, systemEnumerable); 
+            CompareEnumerables(testedEnumerable, systemEnumerable);
         }
 
     }

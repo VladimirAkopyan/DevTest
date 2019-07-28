@@ -7,7 +7,8 @@ namespace Task {
     /// Stores a list of items in the order they're added
     /// </summary>
     /// <typeparam name="T">Value type</typeparam>
-    public class SingleList<T> {
+    public class SingleList<T> : IMyEnumerable<T>
+     {
         internal ListItem head;
         internal ListItem tail;
         internal int _count = 0;
@@ -144,11 +145,14 @@ namespace Task {
                 return true;
             } else return false; //Does not exist
         }
-
-        public Enumerator GetEnumerator() {
+        
+        public  Enumerator GetEnumerator() {
             return new Enumerator(this);
         }
 
+        IMyEnumerator<T> IMyEnumerable<T>.GetEnumerator() {
+            return new Enumerator(this);
+        }
 
         public IEnumerable<T> AsEnumerable() {
             foreach (var item in this) {
@@ -156,11 +160,39 @@ namespace Task {
             }
         }
 
-        public struct Enumerator {
+        public sealed class ListItem {
+            public ListItem Next;
+            public T Value;
+
+            public ListItem(ListItem next, T value) {
+                Next = next;
+                Value = value;
+            }
+        }
+
+        /// <summary>
+        /// Simular idea to the Iterator used by IEnumerable
+        /// </summary>
+        private class IndexCache {
+            public ListItem Item;
+            public int Index;
+
+            public void Advance() {
+                Index++;
+                Item = Item.Next;
+            }
+
+            public void Set(ListItem item, int index) {
+                Item = item;
+                Index = index;
+            }
+        }
+
+        public struct Enumerator : IMyEnumerator<T> {
             SingleList<T> _list;
             //Index here starts at 1 because .Net starts with MoveNext before it calls Current
             int _index;
-            ListItem _currentNode, _nextNode;
+            SingleList<T>.ListItem _currentNode, _nextNode;
 
             internal Enumerator(SingleList<T> singleList) {
                 _list = singleList;
@@ -194,34 +226,6 @@ namespace Task {
                 _index = 0;
                 _currentNode = null;
                 _nextNode = _list.head;
-            }
-        }
-
-        public sealed class ListItem {
-            public ListItem Next;
-            public T Value;
-
-            public ListItem(ListItem next, T value) {
-                Next = next;
-                Value = value;
-            }
-        }
-
-        /// <summary>
-        /// Simular idea to the Iterator used by IEnumerable
-        /// </summary>
-        private class IndexCache {
-            public ListItem Item;
-            public int Index;
-
-            public void Advance() {
-                Index++;
-                Item = Item.Next;
-            }
-
-            public void Set(ListItem item, int index) {
-                Item = item;
-                Index = index;
             }
         }
     }
