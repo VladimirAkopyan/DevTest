@@ -1,10 +1,10 @@
 ## Status:
 [![CircleCI](https://circleci.com/gh/VladimirAkopyan/DevTest.svg?style=svg)](https://circleci.com/gh/VladimirAkopyan/DevTest)
 
-# Developer tests
-
+# Instructions:
 
 There are three types in this project:
+
 	* SingleList
 	* DoubleList
 	* Dict
@@ -65,23 +65,23 @@ Good luck!
 
 
 # Implementation Notes
+	
+1. I have used .Net Core 2.2 and XUnit -> the amount of tests required to prove the collections really work without issues can be quite large. My udnerstanding of these instructions is that I should not focus on Unit testing too much, I've implemented what I consider resonable. 
 
-## IEnumerator 
-The instruction to avoid inheriting from IEnumerable<T> or IEnumerator, 
-yet the method signatures provided explicitly return the IEnumerator. The intent here is not clear to me, 
-so have implemented IEnumerable myself.  
-So I have deleted the interfaces, and amazingly ForEach still works! I never realised it searches for an actual method name.. 
+2. The instruction to avoid inheriting from IEnumerable<T> or IEnumerator surprised me at first, and it took me a while to realise that ForEach and other array operations [work without it](https://blogs.msdn.microsoft.com/kcwalina/2007/07/18/duck-notation/). 
+	
+3. LINQ functions need to operate on a collection, and best I can tell, there is no
+	
+4. Modification of the array while enumerating is considered out of scope for this task. There are no exceptions for that 
+	
+5. Concurrency is considered out of scope 
 
-## Issues not dealt with 
-	* Modification of the array while enumerating is considered out of scope. There are no If-clauses or exceptions for that 
-	* Concurrency is considered out of scope 
-
-## Issues not tested
+6. There is an index-style accessor 
 
 
 ##  Performance 
 I wanted to compare performance with that of system collections to make sure it's roughly on par. 
-The performance numbers here are only a rough guide -> this "benchmark" does not have multiple iterations, and if accurate information is wanted I would reach for Benchmark.net
+The performance numbers here are only a rough guide -> this "benchmark" does not have multiple iterations, and if accurate information is wanted I would reach for [Benchmark.net](https://github.com/dotnet/BenchmarkDotNet)
 
 All operations are performed with an array for 5,000,000 random numbers, except Random Access, which uses a smaller dataset of 50,000
 
