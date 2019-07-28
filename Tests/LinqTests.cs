@@ -7,6 +7,7 @@ using System.Diagnostics;
 using Xunit.Abstractions;
 using System.Linq;
 using System.Collections.Generic;
+using static Tests.Helpers; 
 
 namespace Tests
 {
@@ -32,7 +33,7 @@ namespace Tests
         {
             var dogNamesProduced = _dogListTest.Select(d => d.Name); 
             var dogNamesExpected = _dogListSystem.Select(d => d.Name);
-            comparisonHelper(dogNamesProduced, dogNamesExpected);
+            CompareEnumerables(dogNamesProduced, dogNamesExpected);
         }
 
         [Fact]
@@ -40,7 +41,7 @@ namespace Tests
         {
             var dogNamesProduced = _dogListTest.Select((d, i) => $"{i}: {d.Name}");
             var dogNamesExpected = _dogListSystem.Select((d, i) => $"{i}: {d.Name}");
-            comparisonHelper(dogNamesProduced, dogNamesExpected);
+            CompareEnumerables(dogNamesProduced, dogNamesExpected);
         }
 
         [Fact]
@@ -49,7 +50,7 @@ namespace Tests
             //Dogs who'se age is even
             var dogsExpected = _dogListTest.Where(d => (d.Age % 2) == 0);
             var dogsProduced = _dogListSystem.Where(d => (d.Age % 2) == 0);
-            comparisonHelper(dogsExpected, dogsProduced);
+            CompareEnumerables(dogsExpected, dogsProduced);
         }
 
         [Fact]
@@ -57,7 +58,7 @@ namespace Tests
             //Dogs who's age is lower than their index
             var dogsExpected = _dogListTest.Where((d, i) => (d.Age < i));
             var dogsProduced = _dogListSystem.Where((d, i) => (d.Age < i));
-            comparisonHelper(dogsProduced, dogsExpected);
+            CompareEnumerables(dogsProduced, dogsExpected);
         }
 
         [Fact]
@@ -67,27 +68,9 @@ namespace Tests
             var dogsExpected = _dogListSystem.SelectMany(d => d.Name, 
                 (dog, dogNameLetter) => (dog, dogNameLetter));
 
-            var dogsExpected2 = _dogListSystem.SelectMany(d => d.Name,
+            var dogsProduced = _dogListSystem.SelectMany(d => d.Name,
                 (dog, dogNameLetter) => (dog, dogNameLetter));
-            comparisonHelper(dogsExpected2, dogsExpected);
-        }
-
-        /// <typeparam name="T">Type, won't work with reference types, except strings</typeparam>
-        /// <param name="produced">A list of reqults that were produced by the Linq query implemented by me</param>
-        /// <param name="expected">A list of results that were produced by a system linq query, 
-        /// this is used as the benchmark</param>
-        private void comparisonHelper<T>(IEnumerable<T> produced, 
-            System.Collections.Generic.IEnumerable<T> expected)
-        {
-            var producedArray = produced.ToArray();
-            var expectedArray = expected.ToArray();
-
-            Assert.Equal(expectedArray.Length, producedArray.Length);
-
-            for(int i =0; i < expectedArray.Length; i++)
-            {
-                Assert.Equal(expectedArray[i], producedArray[i]);
-            }
+            CompareEnumerables(dogsProduced, dogsExpected);
         }
     }
 }

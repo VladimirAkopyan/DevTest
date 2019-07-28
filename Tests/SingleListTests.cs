@@ -5,28 +5,27 @@ using Task;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics;
 using Xunit.Abstractions;
+using static Tests.Helpers;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace Tests
-{
-    public class SingleListTests
-    {
+namespace Tests {
+    public class SingleListTests {
 
 
         /// <summary>
         /// List used for testing and comaprison
         /// </summary>
-        public System.Collections.Generic.List<int> integerListSystem = new System.Collections.Generic.List<int>
-        {
+        public List<int> _intListSystem = new List<int>{
             1, 2, 3, 4, 6, 7, 8, -10, -20, 50, 4
         };
-        SingleList<int> testedList = new SingleList<int>();
+        SingleList<int> _intListTested
+            = new SingleList<int>();
 
 
-        public SingleListTests()
-        {
-            foreach (var value in integerListSystem)
-            {
-                testedList.Add(value);
+        public SingleListTests() {
+            foreach (var value in _intListSystem) {
+                _intListTested.Add(value);
             }
         }
 
@@ -37,110 +36,99 @@ namespace Tests
         /// </summary>
         /// <param name="values"></param>
         [Fact]
-        public void Enumerate()
-        {
-            Assert.Equal(testedList.Count, integerListSystem.Count);
+        public void Enumerate() {
+            Assert.Equal(_intListTested.Count, _intListSystem.Count);
 
             int i = 0;
-            foreach(var number in testedList)
-            {               
-                Assert.Equal(number, integerListSystem[i]);
+            foreach (var number in _intListTested) {
+                Assert.Equal(number, _intListSystem[i]);
                 i++;
             }
         }
 
         [Fact]
-        public void IndexOperatorRead()
-        {
-            for (int i = 0; i < integerListSystem.Count; i++)
-            {
-                Assert.Equal(integerListSystem[i], testedList[i]);
+        public void IndexOperatorRead() {
+            for (int i = 0; i < _intListSystem.Count; i++) {
+                Assert.Equal(_intListSystem[i], _intListTested[i]);
             }
         }
 
         [Fact]
-        public void IndexOperatorWrite()
-        {
-            testedList[6] = -500;
-            integerListSystem[6] = -500;
-            testedList[8] = -200;
-            integerListSystem[8] = -200;
-            testedList[1] = -10;
-            integerListSystem[1] = -10;
-            testedList[9] = 666;
-            integerListSystem[9] = 666;
+        public void IndexOperatorWrite() {
+            _intListTested[6] = -500;
+            _intListSystem[6] = -500;
+            _intListTested[8] = -200;
+            _intListSystem[8] = -200;
+            _intListTested[1] = -10;
+            _intListSystem[1] = -10;
+            _intListTested[9] = 666;
+            _intListSystem[9] = 666;
 
-            for (int i = 0; i < integerListSystem.Count; i++)
-            {
-                Assert.Equal(integerListSystem[i], testedList[i]);
+            for (int i = 0; i < _intListSystem.Count; i++) {
+                Assert.Equal(_intListSystem[i], _intListTested[i]);
             }
         }
 
         [Fact]
-        public void RemoveAt(){
+        public void RemoveAt() {
             //Remove At Index Tests
-            testedList.RemoveAt(2);
-            Assert.Equal(testedList.Count, integerListSystem.Count - 1); 
-            Assert.Equal(testedList[2], integerListSystem[3]);
+            _intListTested.RemoveAt(2);
+            Assert.Equal(_intListTested.Count, _intListSystem.Count - 1);
+            Assert.Equal(_intListTested[2], _intListSystem[3]);
 
-            testedList.RemoveAt(0);
-            Assert.Equal(testedList.Count, integerListSystem.Count - 2);
-            Assert.Equal(testedList[0], integerListSystem[1]);
+            _intListTested.RemoveAt(0);
+            Assert.Equal(_intListTested.Count, _intListSystem.Count - 2);
+            Assert.Equal(_intListTested[0], _intListSystem[1]);
 
-            Assert.Equal(testedList.Count, integerListSystem.Count - 2);
+            Assert.Equal(_intListTested.Count, _intListSystem.Count - 2);
         }
 
         [Fact]
-        public void Insert()
-        {
+        public void Insert() {
             //At the start
-            testedList.Insert(0, 666);
-            Assert.Equal(666, testedList[0]);
-            integerListSystem.Insert(0, 666);
-            Assert.Equal(integerListSystem[1], testedList[1]);
+            _intListTested.Insert(0, 666);
+            Assert.Equal(666, _intListTested[0]);
+            _intListSystem.Insert(0, 666);
+            Assert.Equal(_intListSystem[1], _intListTested[1]);
             //in the middle
-            testedList.Insert(4, 999);
-            Assert.Equal(999, testedList[4]);
-            integerListSystem.Insert(4, 999);
-            Assert.Equal(integerListSystem[6], testedList[6]);
+            _intListTested.Insert(4, 999);
+            Assert.Equal(999, _intListTested[4]);
+            _intListSystem.Insert(4, 999);
+            Assert.Equal(_intListSystem[6], _intListTested[6]);
 
             //Append at the end
-            integerListSystem.Insert(integerListSystem.Count, 1234);
-            testedList.Insert(testedList.Count, 1234);
+            _intListSystem.Insert(_intListSystem.Count, 1234);
+            _intListTested.Insert(_intListTested.Count, 1234);
 
-            Assert.Equal(integerListSystem.Count, testedList.Count);
+            Assert.Equal(_intListSystem.Count, _intListTested.Count);
 
-            for (int i = 0; i < testedList.Count; i++){
-                Assert.Equal(integerListSystem[i], testedList[i]);
+            for (int i = 0; i < _intListTested.Count; i++) {
+                Assert.Equal(_intListSystem[i], _intListTested[i]);
             }
         }
 
-        private static void IndexComparisonHelper<T>(params T[] data)
-        {
+        private static void IndexComparisonHelper<T>(params T[] data) {
             //Comparing to a list here just because it implements all the operations. 
             //No particular reason this colleciton was chosen.
-            var systemList = new System.Collections.Generic.List<T>(data);
+            var systemList = new List<T>(data);
 
             var testedList = new SingleList<T>();
 
-            foreach (var value in systemList)
-            {
+            foreach (var value in systemList) {
                 testedList.Add(value);
             }
             //Index Test
-            foreach (var value in systemList)
-            {
+            foreach (var value in systemList) {
                 var correctIndex = systemList.IndexOf(value);
                 var testedIndex = testedList.IndexOf(value);
                 Assert.Equal(correctIndex, testedIndex);
-                Assert.True(testedList.Contains(value)); 
+                Assert.True(testedList.Contains(value));
             }
             //Removal Tests
-            for(int i = 0; i < data.Length; i ++)
-            {
+            for (int i = 0; i < data.Length; i++) {
                 //Let's check it behaves in a manner identical to deference list 
                 Assert.Equal(testedList.Remove(data[2]), systemList.Remove(data[2]));
-                Assert.Equal(testedList.Count, systemList.Count); 
+                Assert.Equal(testedList.Count, systemList.Count);
             }
         }
 
@@ -152,18 +140,16 @@ namespace Tests
         [InlineData("rob", "martha", "sue", "kate", "bob", "bob")]
         [InlineData("rob", "rob", "rob", "rob", "rob", "sue")]
 
-        public void IndexOfString(params string[] data)
-        {
-            IndexComparisonHelper(data); 
+        public void IndexOfString(params string[] data) {
+            IndexComparisonHelper(data);
         }
 
-         /// <summary>
-         /// To see if the list correctly compares vallue types
-         /// </summary>
+        /// <summary>
+        /// To see if the list correctly compares vallue types
+        /// </summary>
         [Theory]
         [InlineData(1, 2, 3, 4, 6, 7, 8, -10, -20, 50, 4)]
-        public void IndexOfValueType(params int[] data)
-        {
+        public void IndexOfValueType(params int[] data) {
             IndexComparisonHelper(data);
         }
 
@@ -171,8 +157,7 @@ namespace Tests
         /// To see if the list correctly compares reference types
         /// </summary>
         [Fact]
-        public void IndexOfRefType()
-        {
+        public void IndexOfRefType() {
             TestDataClass[] data =
             {
                 new TestDataClass{number1 = 1, number2 =2 },
@@ -186,11 +171,12 @@ namespace Tests
             IndexComparisonHelper(data);
         }
 
-        //TODO: As Enumerable Tests! 
-        [Fact]
-        public void AsEnumerableTest()
-        {
 
+        [Fact]
+        public void AsEnumerableTest() {
+            var testedEnumerable = _intListTested.AsEnumerable();
+            var systemEnumerable = _intListSystem.AsEnumerable();
+            CompareEnumerables(testedEnumerable, systemEnumerable); 
         }
 
     }
