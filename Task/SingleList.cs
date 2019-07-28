@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Collections.Generic;
 
 namespace Task
 {
@@ -73,8 +73,6 @@ namespace Task
         /// Inserts the given item at a given position.
         /// Inserting at Index 0 has same effect as attaching something at the front of the array
         /// </summary>
-        /// <param name="index"></param>
-        /// <param name="value"></param>
         public void Insert(int index, T value){
             if ((uint)index > (uint)_count) throw new ArgumentOutOfRangeException();
 
@@ -167,12 +165,14 @@ namespace Task
             return new Enumerator(this);
         }
 
-/* TODO: 
-        public IEnumeable<T> AsEnumerable()
+        
+        public IEnumerable<T> AsEnumerable()
         {
-            throw new NotImplementedException();
+            foreach(var item in this)
+            {
+                yield return item;
+            }
         }
-        */
 
         public struct Enumerator {
             SingleList<T> _list; 

@@ -145,7 +145,7 @@ namespace Tests
         }
 
         /// <summary>
-        /// To see if the list correctly compares strings, because strings are special 
+        /// To see if the list correctly compares strings, because strings are immutable objects
         /// and should be compared by value despite being a reference type
         /// </summary>
         [Theory]
@@ -158,7 +158,7 @@ namespace Tests
         }
 
          /// <summary>
-         /// To see if the list correctly compares reference types
+         /// To see if the list correctly compares vallue types
          /// </summary>
         [Theory]
         [InlineData(1, 2, 3, 4, 6, 7, 8, -10, -20, 50, 4)]
@@ -184,6 +184,13 @@ namespace Tests
                 new TestDataClass{number1 = 1, number2 =3 }
             };
             IndexComparisonHelper(data);
+        }
+
+        //TODO: As Enumerable Tests! 
+        [Fact]
+        public void AsEnumerableTest()
+        {
+
         }
 
     }

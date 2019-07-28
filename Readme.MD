@@ -36,6 +36,14 @@ Do not derive from IDictionary<K,V>, IEnumerable<T>, IComparable<T> or IEquatabl
 and do not create an IEnumerator<T> derived enumerator class for GetEnumerator()
 
 
+## LINQ
+
+There is a static class Extensions in Extensions.cs - I'd like you to implement some 
+basic LINQ operators for the types listed above.
+
+Implement Select, SelectMany and Where extension methods for DoubleList and SingleList
+Implement Select and Where extension methods for DoubleList and SingleList
+
 ## Important
 
 Write your code as though it was for a real project.  So provide comments, don't take 
@@ -51,6 +59,7 @@ is any different.  If you find this is taking you too long, drop me an email, if
 too onerous then we can work something out.
 
 Good luck!
+
 
 # Implementation Notes
 
