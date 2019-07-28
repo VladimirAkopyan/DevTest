@@ -70,7 +70,7 @@ Good luck!
 
 2. The instruction to avoid inheriting from IEnumerable<T> or IEnumerator surprised me at first, and it took me a while to realise that ForEach and other array operations [work without it](https://blogs.msdn.microsoft.com/kcwalina/2007/07/18/duck-notation/). 
 	
-3. LINQ functions need to operate on a collection, and best I can tell, there is no
+3. LINQ functions need to operate on a collection, and best I can tell, there is no DuckTyping for them -> I have implemented them explicitly using SingleList<T>, and it appears that the only way to make them work on multiple collections, without using IEnumerable or simular, is to basically create my own interface MyEnumerable. I am not sure what's the intent here. 
 	
 4. Modification of the array while enumerating is considered out of scope for this task. There are no exceptions for that 
 	
